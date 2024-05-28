@@ -50,7 +50,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:background="@drawable/third_button_sign"
+        android:background="@drawable/button_sign"
         android:padding="5dp"
         android:text="Авторизация"
         android:textAllCaps="false"
