@@ -7,39 +7,39 @@
 
     <fragment
         android:id="@+id/SignInFragment"
-        android:name="com.example.diplomathird.SignInFragment"
+        android:name="com.example.intercomeapp.UI.LoginFragment"
         android:label="SignInFragment"
-        tools:layout="@layout/fragment_sign_in">
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_SignInFragment_to_SignUpFragment"
             app:destination="@id/SignUpFragment"
-            app:popUpTo="@layout/fragment_sign_in"
+            app:popUpTo="@layout/fragment_login"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_SignInFragment_to_WorkFragment"
             app:destination="@id/WorkFragment"
-            app:popUpTo="@layout/fragment_sign_in"
+            app:popUpTo="@layout/fragment_login"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/SignUpFragment"
-        android:name="com.example.diplomathird.SignUpFragment"
+        android:name="com.example.intercomeapp.UI.RegistrationFragment"
         android:label="SignUpFragment"
-        tools:layout="@layout/fragment_sign_up">
+        tools:layout="@layout/fragment_registration">
         <action
             android:id="@+id/action_SignUpFragment_to_WorkFragment"
             app:destination="@id/WorkFragment"
-            app:popUpTo="@layout/fragment_sign_up"
+            app:popUpTo="@layout/fragment_registration"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_SignUpFragment_to_SignInFragment"
             app:destination="@id/SignInFragment"
-            app:popUpTo="@layout/fragment_sign_up"
+            app:popUpTo="@layout/fragment_registration"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/WorkFragment"
-        android:name="com.example.diplomathird.WorkFragment"
+        android:name="com.example.intercomeapp.UI.WorkFragment"
         android:label="fragment_work"
         tools:layout="@layout/fragment_work" />
 </navigation>
