@@ -7,6 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.example.intercomeapp.data.AuthenticationStatus
 import com.example.intercomeapp.models.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import java.util.Timer
+import java.util.TimerTask
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,7 +57,7 @@ class MainActivityViewModel @Inject constructor(
         rImplementation.signOut()
     }
 
-    fun <T> editPreferences(preference: String, value: T) {
+    private fun <T> editPreferences(preference: String, value: T) {
         val sEdit: SharedPreferences.Editor
         if (preference.contains("_BOOL")) {
             sEdit = sPreferences.edit().putBoolean(preference, (value as Boolean))
@@ -63,11 +67,33 @@ class MainActivityViewModel @Inject constructor(
         sEdit.apply()
     }
 
-    fun <T> getPreference(preference: String, defValue: T): T {
+    private fun <T> checkPreferences(preference: String, defValue: T): T {
         if (preference.contains("_BOOL")) {
             return (sPreferences.getBoolean(preference, (defValue as Boolean)) as T)
         } else {
             return (sPreferences.getString(preference, (defValue as String)) as T)
         }
+    }
+
+    private fun getPreferenceProperFormat(preference: String): String {
+        if (preference.contains("_MAIL")) {
+            return preference.replace("_MAIL", "_${getUserEmail()}")
+        }
+        return preference
+    }
+
+    fun <T> updatePreference(preference: String, def: T) {
+        val actualPreference = getPreferenceProperFormat(preference)
+        editPreferences(actualPreference, checkPreferences(actualPreference, def))
+    }
+
+    fun <T> setPreference(preference: String, newVal: T) {
+        val actualPreference = getPreferenceProperFormat(preference)
+        editPreferences(actualPreference, newVal)
+    }
+
+    fun <T> getPreference(preference: String, def: T): T {
+        val actualPreference = getPreferenceProperFormat(preference)
+        return checkPreferences(actualPreference, def)
     }
 }

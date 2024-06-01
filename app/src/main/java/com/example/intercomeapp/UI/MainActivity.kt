@@ -3,23 +3,25 @@ package com.example.intercomeapp.UI
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.intercomeapp.data.Constants.APP_PREFERENCES_PUSHES
+import androidx.navigation.findNavController
+import com.example.intercomeapp.R
+import com.example.intercomeapp.data.Constants.APP_PREFERENCES_INTERCOM_RESPONSE
+import com.example.intercomeapp.data.Constants.APP_PREFERENCES_INTERCOM_SOUND
 import com.example.intercomeapp.data.Constants.APP_PREFERENCES_STAY
-import com.example.intercomeapp.data.Constants.MQTT_CLIENT_ID
-import com.example.intercomeapp.data.Constants.MQTT_SERVER_PORT
-import com.example.intercomeapp.data.Constants.MQTT_SERVER_URI
+import com.example.intercomeapp.data.Constants.INTERCOM_RESPONSE_TYPE_NONE
 import com.example.intercomeapp.databinding.ActivityMainBinding
 import com.example.intercomeapp.viewmodels.MainActivityViewModel
-import com.example.mqtt.MqttRepository
-import com.example.mqtt.MqttViewModel
+import com.example.intercomeapp.viewmodels.MqttViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
-    private val mqttClient: MqttViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +31,29 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#05080D")))
 
-        viewModel.editPreferences(APP_PREFERENCES_STAY, viewModel.getPreference(APP_PREFERENCES_STAY, true))
-        viewModel.editPreferences(APP_PREFERENCES_PUSHES, viewModel.getPreference(APP_PREFERENCES_PUSHES, true))
+        viewModel.updatePreference(APP_PREFERENCES_STAY, true)
 
-        mqttClient.mqttInitialize(this)
-        mqttClient.mqttConnect()
+        viewModel.updatePreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE)
+        viewModel.updatePreference(APP_PREFERENCES_INTERCOM_SOUND, true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.signOut -> {
+                if (viewModel.isUserSingedIn()) {
+                    viewModel.signOut()
+                    //viewModel.editPreferences(APP_PREFERENCES_STAY, false)
+                    binding.container.findNavController().navigate(R.id.SignInFragment)
+                } else {
+                    Log.d("TAG", "Refusing to sign out.")
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
