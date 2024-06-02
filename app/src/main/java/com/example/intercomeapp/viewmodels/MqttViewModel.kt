@@ -15,7 +15,6 @@ import com.example.intercomeapp.data.Constants.MQTT_TOPIC_RESPONSE_TYPE
 import com.example.intercomeapp.data.Constants.MQTT_TOPIC_SOUND
 import com.example.intercomeapp.data.Constants.MQTT_USER_NAME
 import com.example.intercomeapp.data.Constants.MQTT_USER_PASSWORD
-import com.example.intercomeapp.utils.Utils.performTimerEvent
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.eclipse.paho.client.mqttv3.IMqttActionListener

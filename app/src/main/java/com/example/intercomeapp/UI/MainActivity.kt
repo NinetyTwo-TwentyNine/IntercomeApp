@@ -16,7 +16,6 @@ import com.example.intercomeapp.data.Constants.APP_PREFERENCES_STAY
 import com.example.intercomeapp.data.Constants.INTERCOM_RESPONSE_TYPE_NONE
 import com.example.intercomeapp.databinding.ActivityMainBinding
 import com.example.intercomeapp.viewmodels.MainActivityViewModel
-import com.example.intercomeapp.viewmodels.MqttViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -7,10 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.example.intercomeapp.data.AuthenticationStatus
 import com.example.intercomeapp.models.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import java.util.Timer
-import java.util.TimerTask
 import javax.inject.Inject
 
 @HiltViewModel

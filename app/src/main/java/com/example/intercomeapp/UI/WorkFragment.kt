@@ -96,26 +96,18 @@ class WorkFragment : Fragment() {
                 performTimerEvent({
                     imitateIntercomCalls()
                 }, 2500L)
-
-                if (viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE) == INTERCOM_RESPONSE_TYPE_NONE &&
-                    mqttClient.intercomActionStatus.value == null) {
-                    binding.additionalButtons.visibility = View.VISIBLE
-                    binding.additionalButtons.isClickable = true
-                }
             } else {
                 binding.status.setBackgroundDrawable(resources.getDrawable(R.drawable.fourth))
                 binding.status.setText("Ожидание")
-
-                binding.additionalButtons.visibility = View.GONE
-                binding.additionalButtons.isClickable = false
             }
+
+            performTimerEvent({
+                updateManualButtons()
+            }, 50L)
         }
 
         mqttClient.intercomActionStatus.observe(viewLifecycleOwner) {
             if (it != null) {
-                binding.additionalButtons.visibility = View.GONE
-                binding.additionalButtons.isClickable = false
-
                 if (it) {
                     if (viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE) == INTERCOM_RESPONSE_TYPE_ONCE) {
                         binding.openOnce.isChecked = false
@@ -126,6 +118,10 @@ class WorkFragment : Fragment() {
                     binding.status.setBackgroundDrawable(resources.getDrawable(R.drawable.first_second))
                     binding.status.setText("Сбрасываю")
                 }
+
+                performTimerEvent({
+                    updateManualButtons()
+                }, 50L)
             }
         }
     }
@@ -149,14 +145,7 @@ class WorkFragment : Fragment() {
             }
 
             performTimerEvent({
-                if (viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE) == INTERCOM_RESPONSE_TYPE_NONE &&
-                    mqttClient.intercomCallStatus.value == true && mqttClient.intercomActionStatus.value == null) {
-                    binding.additionalButtons.visibility = View.VISIBLE
-                    binding.additionalButtons.isClickable = true
-                } else {
-                    binding.additionalButtons.visibility = View.GONE
-                    binding.additionalButtons.isClickable = false
-                }
+                updateManualButtons()
                 mqttClient.updateResponseType(viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE))
             }, 100L)
         }
@@ -180,6 +169,16 @@ class WorkFragment : Fragment() {
         }
     }
 
+    private fun updateManualButtons() {
+        if (viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE) == INTERCOM_RESPONSE_TYPE_NONE &&
+            mqttClient.intercomCallStatus.value == true && mqttClient.intercomActionStatus.value == null) {
+            binding.additionalButtons.visibility = View.VISIBLE
+            binding.additionalButtons.isClickable = true
+        } else {
+            binding.additionalButtons.visibility = View.GONE
+            binding.additionalButtons.isClickable = false
+        }
+    }
 
     /*
     Дальше идёт код (функция  imitateIntercomCalls), которого в дальнейшем будущем проекта
