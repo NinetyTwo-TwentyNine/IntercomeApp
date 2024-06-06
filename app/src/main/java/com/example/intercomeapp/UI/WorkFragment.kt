@@ -61,13 +61,13 @@ class WorkFragment : Fragment() {
         binding.hangButton.setOnClickListener {
             if (mqttClient.intercomCallStatus.value == true && mqttClient.intercomActionStatus.value == null) {
                 // mqttClient.activateResponseManually(false)
-                imitateIntercomCalls(responseType = INTERCOM_RESPONSE_TYPE_NEVER)
+                imitateIntercomSignals(responseType = INTERCOM_RESPONSE_TYPE_NEVER)
             }
         }
         binding.openButton.setOnClickListener {
             if (mqttClient.intercomCallStatus.value == true && mqttClient.intercomActionStatus.value == null) {
                 // mqttClient.activateResponseManually(true)
-                imitateIntercomCalls(responseType = INTERCOM_RESPONSE_TYPE_ALWAYS)
+                imitateIntercomSignals(responseType = INTERCOM_RESPONSE_TYPE_ALWAYS)
             }
         }
 
@@ -94,15 +94,15 @@ class WorkFragment : Fragment() {
                 binding.status.setText("Звонок на домофон")
 
                 performTimerEvent({
-                    imitateIntercomCalls()
-                }, 2500L)
+                    imitateIntercomSignals()
+                }, 1000L)
             } else {
                 binding.status.setBackgroundDrawable(resources.getDrawable(R.drawable.fourth))
                 binding.status.setText("Ожидание")
             }
 
             performTimerEvent({
-                updateManualButtons()
+                updateSwitchesAndManualResponseButtons()
             }, 50L)
         }
 
@@ -120,7 +120,7 @@ class WorkFragment : Fragment() {
                 }
 
                 performTimerEvent({
-                    updateManualButtons()
+                    updateSwitchesAndManualResponseButtons()
                 }, 50L)
             }
         }
@@ -145,7 +145,7 @@ class WorkFragment : Fragment() {
             }
 
             performTimerEvent({
-                updateManualButtons()
+                updateSwitchesAndManualResponseButtons()
                 mqttClient.updateResponseType(viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE))
             }, 100L)
         }
@@ -168,8 +168,13 @@ class WorkFragment : Fragment() {
             mqttClient.updateResponseType(viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE))
         }
     }
+    
+    private fun updateSwitchesAndManualResponseButtons() {
+        responseSwitches.forEach {
+            it.isClickable = (!mqttClient.intercomCallStatus.value!!)
+            it.isEnabled = (!mqttClient.intercomCallStatus.value!!)
+        }
 
-    private fun updateManualButtons() {
         if (viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE) == INTERCOM_RESPONSE_TYPE_NONE &&
             mqttClient.intercomCallStatus.value == true && mqttClient.intercomActionStatus.value == null) {
             binding.additionalButtons.visibility = View.VISIBLE
@@ -181,11 +186,11 @@ class WorkFragment : Fragment() {
     }
 
     /*
-    Дальше идёт код (функция  imitateIntercomCalls), которого в дальнейшем будущем проекта
+    Дальше идёт код (функция  imitateIntercomSignals), которого в дальнейшем будущем проекта
     не будет, поскольку эту информацию отправляло бы физическое устройство.
     */
 
-    private fun imitateIntercomCalls(responseType: String = viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE)) {
+    private fun imitateIntercomSignals(responseType: String = viewModel.getPreference(APP_PREFERENCES_INTERCOM_RESPONSE, INTERCOM_RESPONSE_TYPE_NONE)) {
         if (responseType == INTERCOM_RESPONSE_TYPE_NONE) { return }
 
         mqttClient.activateResponseManually(responseType != INTERCOM_RESPONSE_TYPE_NEVER)
